@@ -22,8 +22,7 @@ else {
             username: "admin@totvs.com",
             password: "passwordHere",
             globalAdmin: true
-        },
-        {"tenantName":"carolws100","username":"robson.poffo@totvs.com","password":"senha@123"}
+        }
     ];
 }
 

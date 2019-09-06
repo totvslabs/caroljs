@@ -591,7 +591,7 @@ exports.namedQueryLoad = function(domain, accessToken, snapshot, callback) {
     });
 };
 
-exports.sendData = function(domain, accessToken, connectorId, stagingTable, data, callback) {
+exports.sendData = function(domain, accessToken, connectorId, stagingTable, data, callback, intake=false) {
     var url = domain + '.' + server;
 
     var postheaders = {
@@ -609,6 +609,10 @@ exports.sendData = function(domain, accessToken, connectorId, stagingTable, data
         method : 'POST',
         headers : postheaders
     };
+
+    if(intake) {
+        optionspost["path"] = '/api/v2/staging/intake/' + stagingTable + '?returnData=false&connectorId=' + connectorId;
+    }
 
     var reqPost = request.request(optionspost, function(res) {
         res.on('data', function(d) {
@@ -1184,6 +1188,57 @@ exports.getConnectorByName = function(domain, accessToken, connectorName, callba
         });
     });
 
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+}
+
+exports.postConnector = function(domain, accessToken, connectorLabel, connectorName, callback) {
+    var url = domain + '.' + server;
+
+    var data = JSON.stringify({
+        "mdmLabel": {
+          "en-US": connectorLabel
+        },
+        "mdmName": connectorName,
+        "mdmProjectName": "NodeJS lib"
+      });
+
+    var postheaders = {
+        accept : 'application/json',
+        'Content-Type': 'application/json',
+        host: url,
+        Authorization: accessToken,
+        'Content-Length' : Buffer.byteLength(data)
+    };
+
+    var optionspost = {
+        host : url,
+        port : 443,
+        path : '/api/v1/connectors',
+        method : 'POST',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionspost, function(res) {
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body);
+            }
+        });
+    });
+
+    reqPost.write(data);
     reqPost.end();
 
     reqPost.on('error', function(e) {
