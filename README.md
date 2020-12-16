@@ -3,6 +3,24 @@
 
 This is a wrapper to access Carol's endpoint using NodeJS. Feel free to use the tools available and improve it as well.
 
+# Carol Subscription
+
+This is a simple Web Server that expose an URL to allow to consume any data from Carol Subscription. The implementation requires a Postgres database to store all data received.
+
+The expected table follows this specification
+
+```
+CREATE TABLE carol.messages_sub (
+	subscriptionname varchar NULL,
+	messageid varchar NOT NULL,
+	mdmid varchar NOT NULL,
+	"json" json NULL,
+	datetimemessage timestamp(0) NOT NULL,
+	pkk serial NOT NULL,
+	CONSTRAINT messages_sub_pk PRIMARY KEY (pkk)
+);
+CREATE UNIQUE INDEX messages_sub_pkk_idx ON carol.messages_sub USING btree (pkk);
+```
 
 # Commands available
 
