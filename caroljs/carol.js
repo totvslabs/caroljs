@@ -21,9 +21,9 @@ exports.authentication = function(domain, username, password, callback, noerror=
 
     var tenantObject = pass.envs.search({tenantName: domain}).uniqueInstance();
 
-    // if(tenantObject != undefined && tenantObject.organization != undefined) {
-    //     jsonObject["orgSubdomain"] = tenantObject["organization"];
-    // }
+    if(tenantObject != undefined && tenantObject.organization != undefined) {
+        jsonObject["orgSubdomain"] = tenantObject["organization"];
+    }
 
     var postheaders = {
         accept : 'application/json',
@@ -42,12 +42,18 @@ exports.authentication = function(domain, username, password, callback, noerror=
     };
 
     var reqPost = request.request(optionspost, function(res) {
-        res.on('data', function(d) {
-            var result = JSON.parse(d);
+        let body = "";
 
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
             console.info();
             console.info(reqPost.toCurl());
             console.info();
+
+            var result = JSON.parse(body);
 
             accessToken = result.access_token;
 
@@ -64,8 +70,6 @@ exports.authentication = function(domain, username, password, callback, noerror=
     reqPost.write(jsonObject);
     reqPost.end();
     reqPost.on('error', function(e) {
-//        console.error(e);
-//        callback(undefined);
     });
 }
 
@@ -312,6 +316,91 @@ exports.dataModelGetViews = function(domain, accessToken, callback) {
         });
     });
 
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+};
+
+exports.dataModelGetRelationships = function(domain, accessToken, callback) {
+    var url = domain + '.' + server;
+
+    var postheaders = {
+        "accept" : "application/json",
+        "content-type": "application/json",
+        "host": url,
+        "Authorization": accessToken
+    };
+
+    var optionsHeader = {
+        host : url,
+        port : 443,
+        path : '/api/v1/relationship/mapping?pageSize=-1',
+        method : 'GET',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionsHeader, function(res) {
+        res.setEncoding("utf8");
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body.hits);
+            }
+        });
+    });
+
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+};
+
+exports.dataModePostRelationship = function(domain, accessToken, snapshot, callback) {
+    var url = domain + '.' + server;
+
+    var postheaders = {
+        accept : 'application/json',
+        'Content-Type': 'application/json',
+        host: url,
+        Authorization: accessToken,
+        'Content-Length' : Buffer.byteLength(snapshot)
+    };
+
+    var optionspost = {
+        host : url,
+        port : 443,
+        path : '/api/v1/relationship/mapping',
+        method : 'POST',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionspost, function(res) {
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body);
+            }
+        });
+    });
+
+    reqPost.write(snapshot);
     reqPost.end();
 
     reqPost.on('error', function(e) {
@@ -794,6 +883,174 @@ exports.getStagingSchema = function(domain, accessToken, connectorId, stagingTab
 
     var reqPost = request.request(optionsHeader, function(res) {
         res.setEncoding("utf8");
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body);
+            }
+        });
+    });
+
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+};
+
+exports.getETLConfigurations = function(domain, accessToken, connectorId, stagingTableName, callback) {
+    var url = domain + '.' + server;
+
+    var postheaders = {
+        "accept" : "application/json",
+        "content-type": "application/json",
+        "host": url,
+        "Authorization": accessToken
+    };
+
+    var optionsHeader = {
+        host : url,
+        port : 443,
+        path : '/api/v1/etl/connector/' + connectorId + '/sourceEntity/' + stagingTableName,
+        method : 'GET',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionsHeader, function(res) {
+        res.setEncoding("utf8");
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body);
+            }
+        });
+    });
+
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+}
+
+exports.getETLConfigurationSnapshot = function(domain, accessToken, etlConfigurationID, callback) {
+    var url = domain + '.' + server;
+
+    var postheaders = {
+        "accept" : "application/json",
+        "content-type": "application/json",
+        "host": url,
+        "Authorization": accessToken
+    };
+
+    var optionsHeader = {
+        host : url,
+        port : 443,
+        path : '/api/v1/etl/' + etlConfigurationID + '/snapshot',
+        method : 'GET',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionsHeader, function(res) {
+        res.setEncoding("utf8");
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body);
+            }
+        });
+    });
+
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+}
+
+exports.postETLConfigurationSnapshot = function(domain, accessToken, connectorId, snapshot, callback) {
+    var url = domain + '.' + server;
+
+    var postheaders = {
+        accept : 'application/json',
+        'Content-Type': 'application/json',
+        host: url,
+        Authorization: accessToken,
+        'Content-Length' : Buffer.byteLength(snapshot)
+    };
+
+    var optionspost = {
+        host : url,
+        port : 443,
+        path : '/api/v1/etl/connector/' + connectorId,
+        method : 'POST',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionspost, function(res) {
+        let body = "";
+
+        res.on('data', function(data) {
+            body += data;
+        });
+
+        res.on('end', function(d) {
+            body = JSON.parse(body);
+
+            if(callback != undefined) {
+                callback(body);
+            }
+        });
+    });
+
+    reqPost.write(snapshot);
+    reqPost.end();
+
+    reqPost.on('error', function(e) {
+        console.error(e);
+    });
+};
+
+exports.postETLConfigurationPublish = function(domain, accessToken, etlConfiguration, callback) {
+    var url = domain + '.' + server;
+
+    var postheaders = {
+        accept : 'application/json',
+        'Content-Type': 'application/json',
+        host: url,
+        Authorization: accessToken
+    };
+
+    var optionspost = {
+        host : url,
+        port : 443,
+        path : '/api/v1/etl/' + etlConfiguration + '/publish',
+        method : 'POST',
+        headers : postheaders
+    };
+
+    var reqPost = request.request(optionspost, function(res) {
         let body = "";
 
         res.on('data', function(data) {

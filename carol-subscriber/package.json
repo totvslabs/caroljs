@@ -1,0 +1,27 @@
+{
+  "name": "carol-sub",
+  "version": "1.0.0",
+  "description": "subscriber for carol subscription pub/sub",
+  "main": "carol-sub.js",
+  "scripts": {
+    "start": "NODE_ENV=production node src/orders.js",
+    "start:main": "nodemon src/orders.js",
+    "start:delivery": "nodemon src/delivery-sub.js",
+    "start:notification": "nodemon src/notification-sub.js"
+  },
+  "author": "Robson Poffo <robson.poffo@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^3.2.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
