@@ -22,6 +22,18 @@ CREATE TABLE carol.messages_sub (
 CREATE UNIQUE INDEX messages_sub_pkk_idx ON carol.messages_sub USING btree (pkk);
 ```
 
+Install the dependencies (root project folder):
+
+```
+npm install
+```
+
+To start the server, from the project root folder, we need to run the following command:
+
+```
+node src/carol-sub.js
+```
+
 # Commands available
 
  Send data to carol (this is a simple sample)
