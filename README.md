@@ -7,7 +7,12 @@ This is a wrapper to access Carol's endpoint using NodeJS. Feel free to use the 
 
 This is a simple Web Server that expose an URL to allow to consume any data from Carol Subscription. The implementation requires a Postgres database to store all data received.
 
-The expected table follows this specification
+Tools required:
+- Postgres
+- NodeJS (v12.19.0)
+- NPM
+
+The expected table follows this specification:
 
 ```
 CREATE TABLE carol.messages_sub (
@@ -20,6 +25,18 @@ CREATE TABLE carol.messages_sub (
 	CONSTRAINT messages_sub_pk PRIMARY KEY (pkk)
 );
 CREATE UNIQUE INDEX messages_sub_pkk_idx ON carol.messages_sub USING btree (pkk);
+```
+
+Install the project dependencies (root project folder):
+
+```
+npm install
+```
+
+To start the server, from the project root folder, we need to run the following command:
+
+```
+node src/carol-sub.js
 ```
 
 # Commands available
