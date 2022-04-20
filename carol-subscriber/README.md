@@ -1,5 +1,12 @@
 sudo pm2 start src/carol-sub.js --name carol-sub
 
+Carol Subscription
+
+```
+http://SERVER/api/clockin/message
+```
+
+DB DDL
 ```
 -- carol.messages_sub definition
 
