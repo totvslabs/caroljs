@@ -4,11 +4,11 @@ const async = require("async");
 module.exports = {
     message: async (req, res) => {
         const pool = new Pool({
-            user: 'postgres',
-            host: 'localhost',
-            database: 'postgres',
-            password: '',
-            port: 5432,
+            user: process.env.DATABASE_USER || 'postgres',
+            host: process.env.DATABASE_HOST || 'localhost',
+            database: process.env.DATABASE_NAME || 'postgres',
+            password: process.env.DATABASE_PASSWORD || '',
+            port: process.env.DATABASE_PORT || 5432,
         });
 
         let ordersObj = req.body;
