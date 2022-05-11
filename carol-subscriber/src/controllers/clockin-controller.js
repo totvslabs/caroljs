@@ -1,5 +1,6 @@
 const { Pool, Client } = require('pg')
 const async = require("async");
+require('dotenv').config();
 
 module.exports = {
     message: async (req, res) => {
@@ -24,7 +25,7 @@ module.exports = {
             async.eachSeries(arr, function (rec, callbackRecords) {
                 let recStr = JSON.stringify(rec).replace(/[\/\(\)\']/g, "&apos;")
 
-                let insertInto = `INSERT INTO carol.messages_sub(subscriptionname, messageid, mdmid, json, datetimemessage) values('${ordersObj['subscriptionName']}',
+                let insertInto = `INSERT INTO messages_sub(subscriptionname, messageid, mdmid, json, datetimemessage) values('${ordersObj['subscriptionName']}',
                 '${ordersObj['messageId']}',
                 '${rec['mdmId']}',
                 '${recStr}',
