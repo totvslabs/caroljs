@@ -1,16 +1,37 @@
-const { Pool, Client } = require('pg')
-const async = require("async");
+const async = require('async');
+const Postgres = require('../services/postgres-service');
 require('dotenv').config();
 
 module.exports = {
+    list: async (req, res) => {
+        const pool = Postgres.getPool();
+
+        let query = `SELECT * FROM messages_sub m WHERE 1 = 1`;
+
+        if (req.query.mdmid) {
+            query += ` AND m.mdmid = '${req.query.mdmid}'`;
+        }
+
+        if (req.query.messageid) {
+            query += ` AND m.messageid = '${req.query.messageid}'`;
+        }
+
+        query += ' ORDER BY m.datetimemessage';
+
+        try {
+            pool.query(query, (err, dbResponse) => {
+                if (err) {
+                    res.status(500).json(err);
+                } else {
+                    res.json(dbResponse.rows);
+                }
+            });
+        } catch {
+            pool.end();
+        }
+    },
     message: async (req, res) => {
-        const pool = new Pool({
-            user: process.env.DATABASE_USER || 'postgres',
-            host: process.env.DATABASE_HOST || 'localhost',
-            database: process.env.DATABASE_NAME || 'postgres',
-            password: process.env.DATABASE_PASSWORD || '',
-            port: process.env.DATABASE_PORT || 5432,
-        });
+       const pool = Postgres.getPool();
 
         let ordersObj = req.body;
         let now = new Date();
