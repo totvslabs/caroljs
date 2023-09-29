@@ -3,10 +3,18 @@ sudo pm2 start src/carol-sub.js --name carol-sub
 Carol Subscription
 
 ```
-http://SERVER/api/clockin/message
+http://SERVER/api/message
+
+```
+
+Webhook Post Example
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"content":"message"}' http://SERVER/api?type=demo
 ```
 
 DB DDL
+
 ```
 -- carol.messages_sub definition
 
@@ -17,7 +25,8 @@ DB DDL
 CREATE TABLE carol.messages_sub (
 	subscriptionname varchar NULL,
 	messageid varchar NOT NULL,
-	mdmid varchar NOT NULL,
+	mdmid varchar NULL,
+	type varchar NULL,
 	json json NULL,
 	datetimemessage timestamp(0) NOT NULL,
 	pkk serial NOT NULL,
