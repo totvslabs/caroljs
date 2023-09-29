@@ -24,7 +24,7 @@ DB DDL
 
 CREATE TABLE carol.messages_sub (
 	subscriptionname varchar NULL,
-	messageid varchar NOT NULL,
+	messageid varchar NULL,
 	mdmid varchar NULL,
 	type varchar NULL,
 	json json NULL,
