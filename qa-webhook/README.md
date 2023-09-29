@@ -1,4 +1,4 @@
-sudo pm2 start src/carol-sub.js --name carol-sub
+sudo pm2 start src/index.js --name qa-webhook
 
 Carol Subscription
 
