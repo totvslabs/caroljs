@@ -4,4 +4,4 @@ ADD . ./
 
 RUN npm install
 
-CMD ["pm2-runtime", "src/carol-sub.js", "--name", "carol-sub"]
+CMD ["pm2-runtime", "src/index.js", "--name", "qa-webhook"]
