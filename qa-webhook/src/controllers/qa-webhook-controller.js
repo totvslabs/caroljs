@@ -53,7 +53,9 @@ module.exports = {
         if (!body || !Object.keys(body).length) {
             console.info(`Request(${requestType}): 204 empty body`);
 
-            return res.status(204).json({});
+            return res.status(204).json({
+                type: requestType,
+            });
         }
 
         const pool = Postgres.getPool();
@@ -112,7 +114,7 @@ module.exports = {
                     console.info(`\t\t${record['mdmGoldenFieldAndValues']['devicecode']}\t${record['mdmGoldenFieldAndValues']['nsrcode']}\t${record['mdmGoldenFieldAndValues']['mdmeventdate']}`);
                 }
             }, function () {
-                pool.end()
+                pool.end();
 
                 console.info("ATT: records processed (" + body['messageId'] + "): " + arr.length);
 
@@ -135,6 +137,13 @@ module.exports = {
             ];
 
             sqlInsertFn(sqlStatement, sqlValues);
+            pool.end();
+
+            return res.status(200).json({
+                success: true,
+                ack: 'true',
+                type: requestType,
+            });
         }
     },
 };
