@@ -2,7 +2,7 @@
   "name": "carol-sub",
   "version": "1.0.0",
   "description": "Webhook receiver for carol subscription",
-  "main": "carol-sub.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js",
     "start:prod": "NODE_ENV=production node src/index.js"

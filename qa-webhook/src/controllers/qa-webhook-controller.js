@@ -6,28 +6,31 @@ module.exports = {
     list: async (req, res) => {
         const pool = Postgres.getPool();
 
-        let query = `SELECT * FROM messages_sub m WHERE 1 = 1`;
-        const values = [];
+        let sqlStatement = `SELECT * FROM messages_sub m WHERE 1 = 1`;
+        const sqlValues = [];
 
         if (req.query.type) {
-            values.push(req.query.type);
-            query += ` AND m.type = $'${values.length}'`;
+            sqlValues.push(req.query.type);
+            sqlStatement += ` AND m.type = $'${sqlValues.length}'`;
         }
         
         if (req.query.mdmid) {
-            values.push(req.query.mdmid);
-            query += ` AND m.mdmid = $'${values.length}'`;
+            sqlValues.push(req.query.mdmid);
+            sqlStatement += ` AND m.mdmid = $'${sqlValues.length}'`;
         }
 
         if (req.query.messageid) {
-            values.push(req.query.messageid);
-            query += ` AND m.messageid = $'${values.length}'`;
+            sqlValues.push(req.query.messageid);
+            sqlStatement += ` AND m.messageid = $'${sqlValues.length}'`;
         }
 
-        query += ' ORDER BY m.datetimemessage';
+        sqlStatement += ' ORDER BY m.datetimemessage';
 
         try {
-            pool.query(query, (err, dbResponse) => {
+            console.info('sql statement: ', sqlStatement);
+            console.info('sql values: ', sqlValues);
+
+            pool.query(sqlStatement, sqlValues, (err, dbResponse) => {
                 if (err) {
                     res.status(500).json(err);
                 } else {
