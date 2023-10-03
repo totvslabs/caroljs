@@ -6,7 +6,7 @@ var fs = require('fs');
 
 const app = express();
 
-const clockinRoute = require('./routes/clockin-route');
+const qaWebhookRoute = require('./routes/qa-webhook-route');
 
 const helmet = require('helmet');
 const cors = require('cors');
@@ -22,9 +22,10 @@ NODE_ENV !== "production" ? app.use(morgan('dev')) : app.use(morgan('combined'))
 
 app.use(helmet());
 app.use(cors());
-app.use('/api', clockinRoute);
+app.use('/api', qaWebhookRoute);
 
 app.listen(MAIN_PORT);
+
 if (NODE_ENV !== "production") {
-    console.log(`Clockin service is running at http://localhost:${MAIN_PORT}`);
+    console.log(`CarolQAWebhook service is running at http://localhost:${MAIN_PORT}`);
 }

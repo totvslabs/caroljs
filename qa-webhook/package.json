@@ -1,13 +1,11 @@
 {
   "name": "carol-sub",
   "version": "1.0.0",
-  "description": "subscriber for carol subscription pub/sub",
-  "main": "carol-sub.js",
+  "description": "Webhook receiver for carol subscription",
+  "main": "src/index.js",
   "scripts": {
-    "start": "NODE_ENV=production node src/orders.js",
-    "start:main": "nodemon src/orders.js",
-    "start:delivery": "nodemon src/delivery-sub.js",
-    "start:notification": "nodemon src/notification-sub.js"
+    "start": "nodemon src/index.js",
+    "start:prod": "NODE_ENV=production node src/index.js"
   },
   "author": "Robson Poffo <robson.poffo@gmail.com>",
   "license": "MIT",
