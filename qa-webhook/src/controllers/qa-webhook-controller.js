@@ -11,17 +11,17 @@ module.exports = {
 
         if (req.query.type) {
             sqlValues.push(req.query.type);
-            sqlStatement += ` AND m.type = $'${sqlValues.length}'`;
+            sqlStatement += ` AND m.type = $${sqlValues.length}`;
         }
-        
+
         if (req.query.mdmid) {
             sqlValues.push(req.query.mdmid);
-            sqlStatement += ` AND m.mdmid = $'${sqlValues.length}'`;
+            sqlStatement += ` AND m.mdmid = $${sqlValues.length}`;
         }
 
         if (req.query.messageid) {
             sqlValues.push(req.query.messageid);
-            sqlStatement += ` AND m.messageid = $'${sqlValues.length}'`;
+            sqlStatement += ` AND m.messageid = $${sqlValues.length}`;
         }
 
         sqlStatement += ' ORDER BY m.datetimemessage';
@@ -83,7 +83,7 @@ module.exports = {
             //SAVE SUBSCRIPTION RECORDS
             if (!body['records'] || body['records'] == undefined || body['records'].length <= 0) {
                 console.info("ATT: no records sent");
-    
+
                 return res.status(200).json({
                     success: true,
                     ack: `true`
