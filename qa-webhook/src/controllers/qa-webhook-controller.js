@@ -3,6 +3,60 @@ const Postgres = require('../services/postgres-service');
 require('dotenv').config();
 
 module.exports = {
+    listPaginated: () => {
+        const pageSize = req.query.pageSize || 10;
+        const offset = req.query.offset || 0;
+        const pool = Postgres.getPool();
+
+        let sqlStatement = `FROM messages_sub m WHERE 1 = 1`;
+        const sqlValues = [];
+
+        if (req.query.type) {
+            sqlValues.push(req.query.type);
+            sqlStatement += ` AND m.type = $${sqlValues.length}`;
+        }
+
+        if (req.query.mdmid) {
+            sqlValues.push(req.query.mdmid);
+            sqlStatement += ` AND m.mdmid = $${sqlValues.length}`;
+        }
+
+        if (req.query.messageid) {
+            sqlValues.push(req.query.messageid);
+            sqlStatement += ` AND m.messageid = $${sqlValues.length}`;
+        }
+
+        sqlStatement += ' ORDER BY m.datetimemessage';
+        sqlStatement += ` LIMIT ${pageSize} OFFSET ${offset}`;
+
+        const selectStatement = `SELECT * ${sqlStatement}`;
+        const countStatement = `SELECT COUNT(*) as count ${sqlStatement}`;
+        
+        try {
+            console.info('sql statement: ', sqlStatement);
+            console.info('sql values: ', sqlValues);
+
+            pool.query(selectStatement, sqlValues, (err, dbResponse) => {
+                if (err) {
+                    res.status(500).json(err);
+                } else {
+
+                    pool.query(countStatement, sqlValues, (err, countResponse) => {
+                        if (err) {
+                            res.status(500).json(err);
+                        } else {
+                            res.json({
+                                hits: dbResponse.rows,
+                                totalHits: countResponse.rows[0].count,
+                            });
+                        }
+                    });
+                }
+            });
+        } catch {
+            pool.end();
+        }
+    },
     list: async (req, res) => {
         const pool = Postgres.getPool();
 
