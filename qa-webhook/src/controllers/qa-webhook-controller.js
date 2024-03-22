@@ -27,10 +27,10 @@ module.exports = {
         }
 
         sqlStatement += ' ORDER BY m.datetimemessage';
-        sqlStatement += ` LIMIT ${pageSize} OFFSET ${offset}`;
-
-        const selectStatement = `SELECT * ${sqlStatement}`;
         const countStatement = `SELECT COUNT(*) as count ${sqlStatement}`;
+
+        sqlStatement += ` LIMIT ${pageSize} OFFSET ${offset}`;
+        const selectStatement = `SELECT * ${sqlStatement}`;
         
         try {
             console.info('sql statement: ', sqlStatement);
