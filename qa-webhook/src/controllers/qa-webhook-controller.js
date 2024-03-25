@@ -3,7 +3,7 @@ const Postgres = require('../services/postgres-service');
 require('dotenv').config();
 
 module.exports = {
-    listPaginated: () => {
+    listPaginated: (req, res) => {
         const pageSize = req.query.pageSize || 10;
         const offset = req.query.offset || 0;
         const pool = Postgres.getPool();
