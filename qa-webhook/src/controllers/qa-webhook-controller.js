@@ -26,9 +26,9 @@ module.exports = {
             sqlStatement += ` AND m.messageid = $${sqlValues.length}`;
         }
 
-        sqlStatement += ' ORDER BY m.datetimemessage';
         const countStatement = `SELECT COUNT(*) as count ${sqlStatement}`;
-
+        
+        sqlStatement += ' ORDER BY m.datetimemessage';
         sqlStatement += ` LIMIT ${pageSize} OFFSET ${offset}`;
         const selectStatement = `SELECT * ${sqlStatement}`;
         
