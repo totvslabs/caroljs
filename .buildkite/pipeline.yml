@@ -1,0 +1,18 @@
+---
+steps:
+  - label: ":npm: build and push qa-webhook"
+    # required as buildkite does a detached HEAD checkout
+    key: "build-qa-webhook"
+    commands:
+      - 'docker build --build-arg NPM_TOKEN=$NPM_TOKEN -t gcr.io/labs-app-mdm-qa/qa-webhook:"${BUILDKITE_COMMIT}" -f docker/Dockerfile .'
+      - 'docker push gcr.io/labs-app-mdm-qa/qa-webhook:"${BUILDKITE_COMMIT}"'
+    agents:
+      queue: "nodejs-20"
+      dind: true
+    timeout_in_minutes: 10
+    retry:
+      automatic:
+        - exit_status: -1  # Agent was lost
+          limit: 2
+        - exit_status: 255 # Forced agent shutdown
+          limit: 2
