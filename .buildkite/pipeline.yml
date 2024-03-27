@@ -4,7 +4,7 @@ steps:
     # required as buildkite does a detached HEAD checkout
     key: "build-qa-webhook"
     commands:
-      - 'docker build --build-arg NPM_TOKEN=$NPM_TOKEN -t gcr.io/labs-app-mdm-qa/qa-webhook:"${BUILDKITE_COMMIT}" -f docker/Dockerfile .'
+      - 'docker build --build-arg NPM_TOKEN=$NPM_TOKEN -t gcr.io/labs-app-mdm-qa/qa-webhook:"${BUILDKITE_COMMIT}" -f qa-webhook/Dockerfile .'
       - 'docker push gcr.io/labs-app-mdm-qa/qa-webhook:"${BUILDKITE_COMMIT}"'
     agents:
       queue: "nodejs-20"
